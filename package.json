@@ -1,0 +1,37 @@
+{
+  "name": "hermione-skip-runner",
+  "version": "0.0.0",
+  "description": "Plugin for hermione which is intended to run skipped tests",
+  "main": "gemini.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com:gemini-testing/hermione-skip-runner.git"
+  },
+  "bugs": "https://github.com/gemini-testing/hermione-skip-runner/issues",
+  "scripts": {
+    "lint": "eslint .",
+    "test": "npm run lint && npm run test-unit",
+    "test-unit": "mocha test",
+    "precommit": "npm run lint"
+  },
+  "engines": {
+    "node": ">= 4"
+  },
+  "keywords": [
+    "hermione",
+    "plugin",
+    "hermione-skip-runner"
+  ],
+  "author": "Anton Usmansky",
+  "license": "MIT",
+  "dependencies": {
+    "lodash": "^4.15.0"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "eslint": "^3.4.0",
+    "eslint-config-gemini-testing": "^2.2.0",
+    "mocha": "^3.0.2",
+    "sinon": "^1.17.5"
+  }
+}
