@@ -31,12 +31,7 @@ Make sure all tests are passing before submitting pull request:
 npm test
 ```
 
-If you are fixing the bug, add a test that fails without your patch and passes with it. If you are
-adding a feature, write a test for it. To see test coverage report run:
-
-```bash
-npm run cover
-```
+If you are fixing the bug, add a test that fails without your patch and passes with it. If you are adding a feature, write a test for it.
 
 ## Issues reporting
 

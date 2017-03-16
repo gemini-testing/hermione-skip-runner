@@ -26,7 +26,7 @@ module.exports = {
 
     plugins: {
         'skip-runner': {
-          enabled: false # in most cases you pobably want skipped tests to be actually skipped
+          enabled: false # in most cases you pobably whant skipped tests to be actually skipped
         }
     },
 
