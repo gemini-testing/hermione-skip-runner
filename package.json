@@ -1,6 +1,6 @@
 {
   "name": "hermione-skip-runner",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Plugin for hermione which is intended to run skipped tests",
   "main": "gemini.js",
   "repository": {
