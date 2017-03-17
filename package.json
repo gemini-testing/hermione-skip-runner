@@ -25,6 +25,7 @@
   "author": "Anton Usmansky",
   "license": "MIT",
   "dependencies": {
+    "gemini-configparser": "^0.3.0",
     "lodash": "^4.15.0"
   },
   "devDependencies": {
