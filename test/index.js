@@ -7,6 +7,7 @@ const flatten = require('./utils').flatten;
 const mkSuiteStub = require('./utils').mkSuiteStub;
 const mkTestStub = require('./utils').mkTestStub;
 const EventEmitter = require('events').EventEmitter;
+const _ = require('lodash');
 
 describe('plugin', () => {
     const mkHermione_ = () => {
@@ -53,10 +54,11 @@ describe('plugin', () => {
     });
 
     describe('on BEFORE_FILE_READ', () => {
-        const init_ = () => {
+        const init_ = (config) => {
             const hermione = mkHermione_();
 
-            plugin(hermione, {enabled: true});
+            config = _.defaults(config, {enabled: true});
+            plugin(hermione, config);
 
             const rootSuite = mkSuiteStub();
             hermione.emit(hermione.events.BEFORE_FILE_READ, {suite: rootSuite});
@@ -88,6 +90,34 @@ describe('plugin', () => {
             rootSuite.emit('test', test);
 
             assert.ok(test.fn);
+        });
+
+        describe('ignoreTestFail', () => {
+            it('should not mark failed tests as succeeded on browser start error', () => {
+                const rootSuite = init_({ignoreTestFail: true});
+                const test = mkTestStub({
+                    pending: true,
+                    fn: () => Promise.reject('No browser'),
+                    ctx: {} // if browser started than there will be `browser` property in ctx
+                });
+
+                rootSuite.emit('test', test);
+
+                return assert.isRejected(test.fn(), 'No browser');
+            });
+
+            it('should mark failed tests as succeeded', () => {
+                const rootSuite = init_({ignoreTestFail: true});
+                const test = mkTestStub({
+                    pending: true,
+                    fn: () => Promise.reject(),
+                    ctx: {browser: {}}
+                });
+
+                rootSuite.emit('test', test);
+
+                return assert.isFulfilled(test.fn());
+            });
         });
     });
 

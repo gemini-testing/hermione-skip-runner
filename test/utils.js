@@ -8,7 +8,8 @@ function mkRunnableStub(opts) {
         title: 'default-title',
         parent: null,
         fn: _.noop,
-        pending: /pending/i.test(opts.title)
+        pending: /pending/i.test(opts.title),
+        ctx: {}
     });
 
     return _.defaults(opts, {

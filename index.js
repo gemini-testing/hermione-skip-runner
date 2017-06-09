@@ -14,15 +14,28 @@ module.exports = (hermione, opts) => {
             if (runnable.pending) {
                 runnable.wasPending = true;
                 runnable.pending = false;
-                runnable.fn = runnable.fn || _.noop;
+                runnable.fn = runnable.fn || (() => Promise.resolve());
             }
         });
+
+        if (config.ignoreTestFail) {
+            addEventHandler(data.suite, 'test', (test) => {
+                const baseFn = test.fn;
+
+                test.fn = function() {
+                    return baseFn.apply(this, arguments)
+                        .catch((e) => Boolean(test.ctx.browser) || Promise.reject(e));
+                };
+            });
+        }
     });
 
     hermione.on(hermione.events.AFTER_FILE_READ, (data) => rmNotPending(data.suite));
 };
 
 function addEventHandler(suite, events, cb) {
+    events = [].concat(events);
+
     const listenSuite = (suite) => {
         suite.on('suite', listenSuite);
         events.forEach((e) => suite.on(e, cb));
