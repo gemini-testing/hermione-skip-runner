@@ -15,6 +15,7 @@ npm install hermione-skip-runner --save-dev
 ### Configuration
 
 * **enabled** (optional) `Boolean` – enable/disable the plugin; by default plugin is enabled
+* **ignoreTestFail** (optional) `Boolean` - do not actually fail test on fail (except browser start fail), so you can enable retries; `false` by default
 
 ### Usage
 
@@ -26,7 +27,8 @@ module.exports = {
 
     plugins: {
         'skip-runner': {
-          enabled: false # in most cases you pobably whant skipped tests to be actually skipped
+          enabled: false, // in most cases you pobably whant skipped tests to be actually skipped,
+          ignoreTestFail: true
         }
     },
 

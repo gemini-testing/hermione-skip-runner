@@ -15,6 +15,11 @@ const getParser = () => {
             defaultValue: true,
             parseEnv: JSON.parse,
             validate: _.isBoolean
+        }),
+        ignoreTestFail: option({
+            defaultValue: false,
+            parseEnv: JSON.parse,
+            validate: _.isBoolean
         })
     }), {envPrefix: ENV_PREFIX});
 };
