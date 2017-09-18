@@ -11,7 +11,7 @@ module.exports = (hermione, opts) => {
 
     hermione.on(hermione.events.BEFORE_FILE_READ, (data) => {
         addEventHandler(data.suite, ['suite', 'test'], (runnable) => {
-            if (runnable.pending) {
+            if (runnable.pending && !runnable.silentSkip) {
                 runnable.wasPending = true;
                 runnable.pending = false;
                 runnable.fn = runnable.fn || (() => Promise.resolve());

@@ -74,6 +74,16 @@ describe('plugin', () => {
             assert.propertyVal(suite, 'pending', false);
         });
 
+        it('should not enable silently skipped suite', () => {
+            const rootSuite = init_();
+            const suite = mkSuiteStub({pending: true, silentSkip: true});
+
+            rootSuite.emit('suite', suite);
+
+            assert.propertyVal(suite, 'pending', true);
+            assert.propertyVal(suite, 'silentSkip', true);
+        });
+
         it('should enable created test', () => {
             const rootSuite = init_();
             const test = mkTestStub({pending: true});
@@ -81,6 +91,16 @@ describe('plugin', () => {
             rootSuite.emit('test', test);
 
             assert.propertyVal(test, 'pending', false);
+        });
+
+        it('should not enable silently skipped test', () => {
+            const rootSuite = init_();
+            const test = mkTestStub({pending: true, silentSkip: true});
+
+            rootSuite.emit('test', test);
+
+            assert.propertyVal(test, 'pending', true);
+            assert.propertyVal(test, 'silentSkip', true);
         });
 
         it('should restore pending test callback', () => {
