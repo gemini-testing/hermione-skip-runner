@@ -4,6 +4,7 @@ const plugin = require('../');
 const mkTree = require('./utils').mkTree;
 const treeToObj = require('./utils').treeToObj;
 const flatten = require('./utils').flatten;
+const mkRunnableStub = require('./utils').mkRunnableStub;
 const mkSuiteStub = require('./utils').mkSuiteStub;
 const mkTestStub = require('./utils').mkTestStub;
 const EventEmitter = require('events').EventEmitter;
@@ -74,6 +75,16 @@ describe('plugin', () => {
             assert.propertyVal(suite, 'pending', false);
         });
 
+        it('should not enable silently skipped suite', () => {
+            const rootSuite = init_();
+            const suite = mkSuiteStub({pending: true, silentSkip: true});
+
+            rootSuite.emit('suite', suite);
+
+            assert.propertyVal(suite, 'pending', true);
+            assert.propertyVal(suite, 'silentSkip', true);
+        });
+
         it('should enable created test', () => {
             const rootSuite = init_();
             const test = mkTestStub({pending: true});
@@ -81,6 +92,16 @@ describe('plugin', () => {
             rootSuite.emit('test', test);
 
             assert.propertyVal(test, 'pending', false);
+        });
+
+        it('should not enable silently skipped test', () => {
+            const rootSuite = init_();
+            const test = mkTestStub({pending: true, silentSkip: true});
+
+            rootSuite.emit('test', test);
+
+            assert.propertyVal(test, 'pending', true);
+            assert.propertyVal(test, 'silentSkip', true);
         });
 
         it('should restore pending test callback', () => {
@@ -117,6 +138,30 @@ describe('plugin', () => {
                 rootSuite.emit('test', test);
 
                 return assert.isFulfilled(test.fn());
+            });
+
+            it('should mark failed before each hooks as succeeded', () => {
+                const rootSuite = init_({ignoreTestFail: true});
+                const beforeEach = mkRunnableStub({
+                    fn: () => Promise.reject(),
+                    ctx: {browser: {}}
+                });
+
+                rootSuite.emit('beforeEach', beforeEach);
+
+                return assert.isFulfilled(beforeEach.fn());
+            });
+
+            it('should mark failed after each hooks as succeeded', () => {
+                const rootSuite = init_({ignoreTestFail: true});
+                const afterEach = mkRunnableStub({
+                    fn: () => Promise.reject(),
+                    ctx: {browser: {}}
+                });
+
+                rootSuite.emit('afterEach', afterEach);
+
+                return assert.isFulfilled(afterEach.fn());
             });
         });
     });

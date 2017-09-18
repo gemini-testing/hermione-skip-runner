@@ -11,7 +11,7 @@ module.exports = (hermione, opts) => {
 
     hermione.on(hermione.events.BEFORE_FILE_READ, (data) => {
         addEventHandler(data.suite, ['suite', 'test'], (runnable) => {
-            if (runnable.pending) {
+            if (runnable.pending && !runnable.silentSkip) {
                 runnable.wasPending = true;
                 runnable.pending = false;
                 runnable.fn = runnable.fn || (() => Promise.resolve());
@@ -19,12 +19,12 @@ module.exports = (hermione, opts) => {
         });
 
         if (config.ignoreTestFail) {
-            addEventHandler(data.suite, 'test', (test) => {
-                const baseFn = test.fn;
+            addEventHandler(data.suite, ['beforeEach', 'test', 'afterEach'], (runnable) => {
+                const baseFn = runnable.fn;
 
-                test.fn = function() {
+                runnable.fn = function() {
                     return baseFn.apply(this, arguments)
-                        .catch((e) => Boolean(test.ctx.browser) || Promise.reject(e));
+                        .catch((e) => Boolean(runnable.ctx.browser) || Promise.reject(e));
                 };
             });
         }
