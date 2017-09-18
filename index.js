@@ -19,12 +19,12 @@ module.exports = (hermione, opts) => {
         });
 
         if (config.ignoreTestFail) {
-            addEventHandler(data.suite, 'test', (test) => {
-                const baseFn = test.fn;
+            addEventHandler(data.suite, ['beforeEach', 'test', 'afterEach'], (runnable) => {
+                const baseFn = runnable.fn;
 
-                test.fn = function() {
+                runnable.fn = function() {
                     return baseFn.apply(this, arguments)
-                        .catch((e) => Boolean(test.ctx.browser) || Promise.reject(e));
+                        .catch((e) => Boolean(runnable.ctx.browser) || Promise.reject(e));
                 };
             });
         }

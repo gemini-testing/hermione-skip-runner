@@ -4,6 +4,7 @@ const plugin = require('../');
 const mkTree = require('./utils').mkTree;
 const treeToObj = require('./utils').treeToObj;
 const flatten = require('./utils').flatten;
+const mkRunnableStub = require('./utils').mkRunnableStub;
 const mkSuiteStub = require('./utils').mkSuiteStub;
 const mkTestStub = require('./utils').mkTestStub;
 const EventEmitter = require('events').EventEmitter;
@@ -137,6 +138,30 @@ describe('plugin', () => {
                 rootSuite.emit('test', test);
 
                 return assert.isFulfilled(test.fn());
+            });
+
+            it('should mark failed before each hooks as succeeded', () => {
+                const rootSuite = init_({ignoreTestFail: true});
+                const beforeEach = mkRunnableStub({
+                    fn: () => Promise.reject(),
+                    ctx: {browser: {}}
+                });
+
+                rootSuite.emit('beforeEach', beforeEach);
+
+                return assert.isFulfilled(beforeEach.fn());
+            });
+
+            it('should mark failed after each hooks as succeeded', () => {
+                const rootSuite = init_({ignoreTestFail: true});
+                const afterEach = mkRunnableStub({
+                    fn: () => Promise.reject(),
+                    ctx: {browser: {}}
+                });
+
+                rootSuite.emit('afterEach', afterEach);
+
+                return assert.isFulfilled(afterEach.fn());
             });
         });
     });

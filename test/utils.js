@@ -3,7 +3,7 @@
 const _ = require('lodash');
 const EventEmitter = require('events').EventEmitter;
 
-function mkRunnableStub(opts) {
+const mkRunnableStub = exports.mkRunnableStub = function(opts) {
     opts = _.defaults(opts || {}, {
         title: 'default-title',
         parent: null,
@@ -15,7 +15,7 @@ function mkRunnableStub(opts) {
     return _.defaults(opts, {
         fullTitle: () => opts.parent ? _.compact([opts.parent.fullTitle(), opts.title]).join(' ') : opts.title
     });
-}
+};
 
 function mkSuiteStub(opts) {
     return mkRunnableStub(_.extend(new EventEmitter(), opts));
