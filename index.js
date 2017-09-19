@@ -5,7 +5,7 @@ const _ = require('lodash');
 
 module.exports = (hermione, opts) => {
     const config = parseConfig(opts);
-    if (!config.enabled) {
+    if (!config.enabled || hermione.isWorker()) {
         return;
     }
 
