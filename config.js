@@ -9,17 +9,23 @@ const option = configParser.option;
 
 const ENV_PREFIX = 'hermione_skip_runner_';
 
+const validateBoolean = (val) => {
+    if (!_.isBoolean(val)) {
+        throw new Error('Option value must be boolean');
+    }
+};
+
 const getParser = () => {
     return root(section({
         enabled: option({
             defaultValue: true,
             parseEnv: JSON.parse,
-            validate: _.isBoolean
+            validate: validateBoolean
         }),
         ignoreTestFail: option({
             defaultValue: false,
             parseEnv: JSON.parse,
-            validate: _.isBoolean
+            validate: validateBoolean
         })
     }), {envPrefix: ENV_PREFIX});
 };
