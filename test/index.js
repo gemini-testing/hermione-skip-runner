@@ -17,6 +17,7 @@ describe('plugin', () => {
             BEFORE_FILE_READ: 'beforeFileRead',
             AFTER_FILE_READ: 'afterFileRead'
         };
+        hermione.isWorker = sinon.stub().returns(false);
         return hermione;
     };
 
@@ -38,6 +39,17 @@ describe('plugin', () => {
             const hermione = mkHermione_();
 
             plugin(hermione, {enabled: false});
+
+            assert.equal(hermione.listeners(hermione.events.BEFORE_FILE_READ).length, 0);
+            assert.equal(hermione.listeners(hermione.events.AFTER_FILE_READ).length, 0);
+        });
+
+        it('should do nothing in workers', () => {
+            const hermione = mkHermione_();
+
+            hermione.isWorker.returns(true);
+
+            plugin(hermione, {});
 
             assert.equal(hermione.listeners(hermione.events.BEFORE_FILE_READ).length, 0);
             assert.equal(hermione.listeners(hermione.events.AFTER_FILE_READ).length, 0);
