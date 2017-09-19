@@ -51,5 +51,5 @@ function rmNotPending(suite) {
 
     suite.suites.forEach(rmNotPending);
     suite.tests = suite.tests.filter((t) => t.wasPending);
-    suite.suites = suite.suites.filter((s) => !_.isEmpty(s.tests));
+    suite.suites = suite.suites.filter((s) => !_.isEmpty(s.tests) || !_.isEmpty(s.suites));
 }

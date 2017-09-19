@@ -206,6 +206,22 @@ describe('plugin', () => {
             });
         });
 
+        it('should leave pending tests which are nested in several suites', () => {
+            const tree = mkTree({
+                someSuite: {
+                    anotherSuite: ['pending test in nested suite']
+                }
+            });
+
+            applyPlugin_(tree);
+
+            assert.deepEqual(treeToObj(tree), {
+                someSuite: {
+                    anotherSuite: ['pending test in nested suite']
+                }
+            });
+        });
+
         it('should enable pending suites and tests', () => {
             const tree = mkTree({
                 pendingSuite: ['foo test'],
