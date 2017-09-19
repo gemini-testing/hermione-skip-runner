@@ -5,7 +5,7 @@ const _ = require('lodash');
 
 module.exports = (hermione, opts) => {
     const config = parseConfig(opts);
-    if (!config.enabled || hermione.isWorker()) {
+    if (!config.enabled) {
         return;
     }
 
@@ -30,7 +30,7 @@ module.exports = (hermione, opts) => {
         }
     });
 
-    hermione.on(hermione.events.AFTER_FILE_READ, (data) => rmNotPending(data.suite));
+    hermione.isWorker() || hermione.on(hermione.events.AFTER_FILE_READ, (data) => rmNotPending(data.suite));
 };
 
 function addEventHandler(suite, events, cb) {
