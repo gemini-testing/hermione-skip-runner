@@ -44,17 +44,6 @@ describe('plugin', () => {
             assert.equal(hermione.listeners(hermione.events.AFTER_FILE_READ).length, 0);
         });
 
-        it('should do nothing in workers', () => {
-            const hermione = mkHermione_();
-
-            hermione.isWorker.returns(true);
-
-            plugin(hermione, {});
-
-            assert.equal(hermione.listeners(hermione.events.BEFORE_FILE_READ).length, 0);
-            assert.equal(hermione.listeners(hermione.events.AFTER_FILE_READ).length, 0);
-        });
-
         it('should enable plugin by environment variable', () => {
             const hermione = mkHermione_();
             process.env['hermione_skip_runner_enabled'] = true;
@@ -175,6 +164,18 @@ describe('plugin', () => {
 
                 return assert.isFulfilled(afterEach.fn());
             });
+        });
+    });
+
+    describe('workers', () => {
+        it('should not modify suite tree', () => {
+            const hermione = mkHermione_();
+
+            hermione.isWorker.returns(true);
+
+            plugin(hermione, {});
+
+            assert.equal(hermione.listeners(hermione.events.AFTER_FILE_READ).length, 0);
         });
     });
 
