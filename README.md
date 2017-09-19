@@ -1,4 +1,4 @@
-# hermione-skip-runner
+# hermione-skip-runner [![Build Status](https://travis-ci.org/gemini-testing/hermione-skip-runner.svg?branch=master)](https://travis-ci.org/gemini-testing/hermione-skip-runner)
 
 Plugin for [hermione](https://github.com/gemini-testing/hermione) which is intended to run skipped tests in order to obtain some data available only in runtime.
 
