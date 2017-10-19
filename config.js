@@ -8,6 +8,7 @@ const section = configParser.section;
 const option = configParser.option;
 
 const ENV_PREFIX = 'hermione_skip_runner_';
+const CLI_PREFIX = '--skip-runner-';
 
 const validateBoolean = (val) => {
     if (!_.isBoolean(val)) {
@@ -27,7 +28,7 @@ const getParser = () => {
             parseEnv: JSON.parse,
             validate: validateBoolean
         })
-    }), {envPrefix: ENV_PREFIX});
+    }), {envPrefix: ENV_PREFIX, cliPrefix: CLI_PREFIX});
 };
 
 module.exports = (options) => {

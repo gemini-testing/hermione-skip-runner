@@ -27,7 +27,7 @@ module.exports = {
 
     plugins: {
         'skip-runner': {
-          enabled: false, // in most cases you pobably whant skipped tests to be actually skipped,
+          enabled: false, // in most cases you pobably want skipped tests to be actually skipped,
           ignoreTestFail: true
         }
     },
@@ -37,5 +37,6 @@ module.exports = {
 ```
 
 ```bash
-hermione_skip_runner_enabled=true ./node_modules/.bin/hermione test
+hermione_skip_runner_enabled=true ./node_modules/.bin/hermione
+./node_modules/.bin/hermione --skip-runner-enabled true
 ```
