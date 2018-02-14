@@ -10,10 +10,12 @@ const option = configParser.option;
 const ENV_PREFIX = 'hermione_skip_runner_';
 const CLI_PREFIX = '--skip-runner-';
 
-const validateBoolean = (val) => {
-    if (!_.isBoolean(val)) {
-        throw new Error('Option value must be boolean');
-    }
+const isBoolean = (option) => {
+    return (v) => {
+        if (!_.isBoolean(v)) {
+            throw new Error(`"${option}" option must be boolean, but got ${typeof v}`);
+        }
+    };
 };
 
 const getParser = () => {
@@ -21,12 +23,14 @@ const getParser = () => {
         enabled: option({
             defaultValue: true,
             parseEnv: JSON.parse,
-            validate: validateBoolean
+            parseCli: JSON.parse,
+            validate: isBoolean('enabled')
         }),
         ignoreTestFail: option({
             defaultValue: false,
             parseEnv: JSON.parse,
-            validate: validateBoolean
+            parseCli: JSON.parse,
+            validate: isBoolean('ignoreTestFail')
         })
     }), {envPrefix: ENV_PREFIX, cliPrefix: CLI_PREFIX});
 };
