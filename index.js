@@ -24,6 +24,7 @@ module.exports = (hermione, opts) => {
 
                 runnable.fn = function() {
                     return baseFn.apply(this, arguments)
+                        .then(() => delete (runnable.hermioneCtx || {}).assertViewResults)
                         .catch((e) => Boolean(runnable.ctx.browser) || Promise.reject(e));
                 };
             });
