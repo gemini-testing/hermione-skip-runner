@@ -164,6 +164,21 @@ describe('plugin', () => {
 
                 return assert.isFulfilled(afterEach.fn());
             });
+
+            it('should remove assert view results from runnable', () => {
+                const rootSuite = init_({ignoreTestFail: true});
+                const test = mkTestStub({
+                    pending: true,
+                    fn: () => Promise.resolve(),
+                    ctx: {browser: {}},
+                    hermioneCtx: {baz: 'qux', assertViewResults: {foo: 'bar'}}
+                });
+
+                rootSuite.emit('test', test);
+
+                return test.fn()
+                    .then(() => assert.deepEqual(test.hermioneCtx, {baz: 'qux'}));
+            });
         });
     });
 
