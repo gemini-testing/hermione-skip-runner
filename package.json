@@ -10,12 +10,12 @@
   "bugs": "https://github.com/gemini-testing/hermione-skip-runner/issues",
   "scripts": {
     "lint": "eslint .",
-    "test": "npm run lint && npm run test-unit",
+    "test": "npm run test-unit && npm run lint",
     "test-unit": "mocha test",
     "precommit": "npm run lint"
   },
   "engines": {
-    "node": ">= 6"
+    "node": ">= 8"
   },
   "keywords": [
     "hermione",
@@ -25,15 +25,14 @@
   "author": "Anton Usmansky",
   "license": "MIT",
   "dependencies": {
-    "gemini-configparser": "^1.0.0",
-    "lodash": "^4.15.0"
+    "gemini-configparser": "^1.0.0"
   },
   "devDependencies": {
-    "chai": "^3.5.0",
-    "chai-as-promised": "^5.2.0",
-    "eslint": "^3.4.0",
-    "eslint-config-gemini-testing": "^2.2.0",
-    "mocha": "^3.0.2",
-    "sinon": "^1.17.5"
+    "chai": "^4.1.2",
+    "eslint": "^4.19.1",
+    "eslint-config-gemini-testing": "^2.8.0",
+    "lodash": "^4.17.10",
+    "mocha": "^5.2.0",
+    "sinon": "^6.0.1"
   }
 }

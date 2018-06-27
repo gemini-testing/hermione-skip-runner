@@ -1,7 +1,6 @@
 'use strict';
 
 const parseConfig = require('./config');
-const _ = require('lodash');
 
 module.exports = (hermione, opts) => {
     const config = parseConfig(opts);
@@ -9,48 +8,30 @@ module.exports = (hermione, opts) => {
         return;
     }
 
-    hermione.on(hermione.events.BEFORE_FILE_READ, (data) => {
-        addEventHandler(data.suite, ['suite', 'test'], (runnable) => {
-            if (runnable.pending && !runnable.silentSkip) {
-                runnable.wasPending = true;
-                runnable.pending = false;
-                runnable.fn = runnable.fn || (() => Promise.resolve());
+    hermione.on(hermione.events.AFTER_TESTS_READ, (collection) => {
+        collection.eachTest((test) => {
+            if (test.pending) {
+                if (!test.silentSkip) {
+                    test.pending = false;
+                }
+            } else {
+                test.pending = true;
+                test.silentSkip = true;
             }
         });
-
-        if (config.ignoreTestFail) {
-            addEventHandler(data.suite, ['beforeEach', 'test', 'afterEach'], (runnable) => {
-                const baseFn = runnable.fn;
-
-                runnable.fn = function() {
-                    return baseFn.apply(this, arguments)
-                        .then(() => delete (runnable.hermioneCtx || {}).assertViewResults)
-                        .catch((e) => Boolean(runnable.ctx.browser) || Promise.reject(e));
-                };
-            });
-        }
     });
 
-    hermione.isWorker() || hermione.on(hermione.events.AFTER_FILE_READ, (data) => rmNotPending(data.suite));
-};
-
-function addEventHandler(suite, events, cb) {
-    events = [].concat(events);
-
-    const listenSuite = (suite) => {
-        suite.on('suite', listenSuite);
-        events.forEach((e) => suite.on(e, cb));
-    };
-
-    listenSuite(suite);
-}
-
-function rmNotPending(suite) {
-    if (suite.wasPending) {
+    if (!hermione.isWorker() || !config.ignoreTestFail) {
         return;
     }
 
-    suite.suites.forEach(rmNotPending);
-    suite.tests = suite.tests.filter((t) => t.wasPending);
-    suite.suites = suite.suites.filter((s) => !_.isEmpty(s.tests) || !_.isEmpty(s.suites));
-}
+    const runTest = hermione.runTest;
+    hermione.runTest = function(...args) {
+        return runTest.call(this, ...args)
+            .then((data) => {
+                delete (data.hermioneCtx || {}).assertViewResults;
+                return data;
+            })
+            .catch(() => ({}));
+    };
+};
